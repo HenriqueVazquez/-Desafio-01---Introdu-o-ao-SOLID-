@@ -1,0 +1,403 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Documentação UserX",
+    "description": "Uma api para cadastrar e administrar usuários",
+    "version": "1.0.0",
+    "contact": {
+      "email": "henrique@rocketseat.com.br"
+    }
+  },
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Criar um novo usuário",
+        "description": "Criar um novo usuário",
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "name": "Nome",
+            "in": "body",
+            "description": "Nome do usuário",
+            "required": true,
+
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "name": "User name"
+              }
+            }
+          },
+          {
+            "name": "Email",
+            "in": "body",
+            "description": "User email",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "example": {
+                "email": "userEemail@teste.com"
+              }
+            }
+
+          }
+
+        ],
+
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "name": "Henrique",
+                  "email": "test@test.com"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Operação realizada com sucesso",
+						"content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"admin": {
+											"type": "boolean"
+										},
+										"id": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"email": {
+											"type": "string"
+										},
+										"created_at": {
+											"type": "string"
+										},
+										"updated_at": {
+											"type": "string"
+										}
+									},
+									"example": {
+										"id": "f59fe0d3-3f62-4aec-b8f2-0b0c3372d3ab",
+										"admin": false,
+										"name": "Henrique",
+										"email": "Henrique_pm_vazquez@y.cw",
+										"created_at": "2022-07-28T21:11:53.216Z",
+										"updated_at": "2022-07-28T21:11:53.216Z"
+									}
+								}
+							}
+						}
+          },
+          "400": {
+            "description": "Email já cadastrado",
+            "content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "string"
+										}
+									},
+									"example": {
+										"error": "User already exists!"
+									}
+								}
+							}
+						}
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "Lista todos os usuários",
+        "description": "Somente usuário `admin` pode fazer a listagem",
+        "operationId": "listUsers",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "description": "Admin user id",
+            "required": true,
+
+            "schema": {
+              "type": "string",
+							"format": "uuid"
+            }
+          }
+        ],
+
+        "requestHeader": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string",
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "user_id": "20392792-cf52-4c8a-84b2-24d312c45e3d"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"admin": {
+											"type": "boolean"
+										},
+										"id": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"email": {
+											"type": "string"
+										},
+										"created_at": {
+											"type": "string"
+										},
+										"updated_at": {
+											"type": "string"
+										}
+									},
+									"example":
+										[
+                      {
+                    "id": "f59fe0d3-3f62-4aec-b8f2-0b0c3372d3ab",
+										"admin": false,
+										"name": "Henrique",
+										"email": "Henrique_pm_vazquez@y.cw",
+										"created_at": "2022-07-28T21:11:53.216Z",
+										"updated_at": "2022-07-28T21:11:53.216Z"
+                  },
+                  {
+										"id": "099140a4-6faf-4649-8699-f5e9b34b71ed",
+										"admin": true,
+										"name": "Karen",
+										"email": "karen@y.cw",
+										"created_at": "2022-07-28T22:46:05.722Z",
+										"updated_at": "2022-07-28T22:46:23.098Z"
+									}
+                  ]
+								}
+							}
+						}
+          },
+          "400": {
+            "description": "Usuário sem permissão ou não encontrado",
+            "content": {
+							"aplication/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"error": {
+											"type": "string"
+										}
+									},
+									"example": {
+										"error": "You need to be an administrator to list all users"
+									}
+								}
+							}
+						}
+          }
+        }
+      }
+    },
+      "/users/{user_id}": {
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Retorna um usuário específico",
+          "description": "Retorna um usuário específico ao informar o id",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "user_id",
+              "required": true,
+              "description": "User ID",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "aplication/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "admin": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "type": "string"
+                      }
+                    },
+                    "example": {
+                      "id": "f59fe0d3-3f62-4aec-b8f2-0b0c3372d3ab",
+										"admin": false,
+										"name": "Henrique",
+										"email": "Henrique_pm_vazquez@y.cw",
+										"created_at": "2022-07-28T21:11:53.216Z",
+										"updated_at": "2022-07-28T21:11:53.216Z"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Usuário não econtrado",
+              "content": {
+                "aplication/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": "string"
+                    },
+                    "example": {
+                      "error": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{user_id}/admin": {
+        "patch": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Torna um usuário administrador",
+          "description": "Informa o ID do usuário e tranforma ele em administrador",
+          "parameters": [
+            {
+              "in": "header",
+              "name": "user_id",
+              "required": true,
+              "description": "User ID",
+              "schema": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operação realizada com sucesso",
+              "content": {
+                "aplication/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "admin": {
+                        "type": "boolean"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "type": "string"
+                      }
+                    },
+                    "example": {
+                      "id": "f59fe0d3-3f62-4aec-b8f2-0b0c3372d3ab",
+										"admin": true,
+										"name": "Henrique",
+										"email": "Henrique_pm_vazquez@y.cw",
+										"created_at": "2022-07-28T21:11:53.216Z",
+										"updated_at": "2022-07-28T21:11:53.216Z"
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Usuário não econtrado",
+              "content": {
+                "aplication/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": "string"
+                    },
+                    "example": {
+                      "error": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+  }
+  }
+
+
